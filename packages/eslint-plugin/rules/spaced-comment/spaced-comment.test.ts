@@ -356,6 +356,26 @@ run<RuleOptions, MessageIds>({
       code: '/// <amd-module name="moduleName" />',
       options: ['always'],
     },
+    {
+      code: '///<reference types="node" />',
+      options: ['always'],
+    },
+    {
+      code: '///<reference path="path/to/file" />',
+      options: ['always'],
+    },
+    {
+      code: '///<amd-module name="moduleName" />',
+      options: ['always'],
+    },
+    {
+      code: '///<reference types="node" />',
+      options: ['always', { line: { markers: ['/'] } }],
+    },
+    {
+      code: '///<amd-module name="moduleName" />',
+      options: ['always', { line: { markers: ['/'] } }],
+    },
   ],
 
   invalid: [
@@ -682,6 +702,35 @@ run<RuleOptions, MessageIds>({
           data: { refChar: '*/' },
         },
       ],
+    },
+
+    // only a real triple-slash directive is ignored
+    {
+      code: '///<div />',
+      output: '// /<div />',
+      options: ['always'],
+      errors: [{
+        messageId: 'expectedSpaceAfter',
+        data: { refChar: '//' },
+      }],
+    },
+    {
+      code: '//<reference types="node" />',
+      output: '// <reference types="node" />',
+      options: ['always'],
+      errors: [{
+        messageId: 'expectedSpaceAfter',
+        data: { refChar: '//' },
+      }],
+    },
+    {
+      code: '///<div />',
+      output: '/// <div />',
+      options: ['always', { line: { markers: ['/'] } }],
+      errors: [{
+        messageId: 'expectedSpaceAfter',
+        data: { refChar: '///' },
+      }],
     },
   ],
 
